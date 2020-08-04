@@ -1,0 +1,12 @@
+package app.repo;
+
+import app.entity.CreditInfo;
+import app.entity.Customer;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CreditInfoRepo extends JpaRepository<CreditInfo, Integer> {
+
+
+}

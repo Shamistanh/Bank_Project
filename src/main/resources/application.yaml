@@ -1,0 +1,24 @@
+server:
+  port: ${PORT:5000}
+
+spring:
+  main:
+    banner-mode: off
+
+
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: sh7513244
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+
+
+
