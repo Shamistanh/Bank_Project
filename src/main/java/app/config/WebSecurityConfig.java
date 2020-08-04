@@ -36,6 +36,48 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.applicationUserService = applicationUserService;
     }
 
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .antMatchers("/", "/index").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/me/**").hasRole("USER")
+                .anyRequest().authenticated()
+                .and()
+                .logout()
+                .permitAll();
+
+        http.headers().frameOptions().sameOrigin();
+
+    }
+
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        UserDetails user =
+                User.withDefaultPasswordEncoder()
+                        .username("user")
+                        .password("password")
+                        .roles("USER")
+                        .build();
+
+        UserDetails user2 =
+                User.withDefaultPasswordEncoder()
+                        .username("admin")
+                        .password("password2")
+                        .roles("ADMIN")
+                        .build();
+
+        return new InMemoryUserDetailsManager(user, user2);
+    }
+
+    /*
+    Aşağıdakı kodla siz spring aplikasiyankızı db ə qoşa haəmçinin front səhifələr artıra bilərsiniz.
+     */
+
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http
@@ -69,48 +111,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    }
 
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/me/**").hasRole("USER")
-                .anyRequest().authenticated()
-                .and()
-                .logout()
-                .permitAll();
-
-        http.headers().frameOptions().sameOrigin();
-
-    }
 
 
-//    @Bean
 //    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("password")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(daoAuthenticationProvider());
 //    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(applicationUserService);
-        return provider;
-    }
+//
+//    @Bean
+//    public DaoAuthenticationProvider daoAuthenticationProvider() {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setPasswordEncoder(passwordEncoder);
+//        provider.setUserDetailsService(applicationUserService);
+//        return provider;
+//    }
 
 
 
